@@ -24,7 +24,6 @@ class Cell extends Rectangle {
         this.setStroke(Color.LIMEGREEN);
         this.setOnMouseClicked(mouseEvent -> {
             this.setActive(!this.isActive()); // Invert the state
-            this.setFill(this.isActive() ? Color.LIMEGREEN : Color.BLACK); // Switch the color accordingly
         });
     }
 }

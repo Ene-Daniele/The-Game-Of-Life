@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -16,37 +17,50 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) {
-        Scene scene = new Scene(root, 850, 760, Color.BLACK);
 
+        Scene scene = new Scene(root, 900, 760, Color.BLACK);
+
+        Slider speed = new Slider();
+        speed.setTranslateX(770);
+        speed.setTranslateY(100);
+        speed.setMax(60);
+        speed.setMin(1);
+        speed.setPrefWidth(120);
+        speed.setValue(10);
+        root.getChildren().add(speed);
+
+        Button start = new Button("start");
+        start.setTranslateX(770);
+        start.setTranslateY(10);
+        start.setPrefWidth(120);
+        root.getChildren().add(start);
+
+        Button stop = new Button("stop");
+        stop.setTranslateX(770);
+        stop.setTranslateY(40);
+        stop.setPrefWidth(120);
+        stop.setDisable(true);
+        root.getChildren().add(stop);
+
+        Button reset = new Button("reset");
+        reset.setTranslateX(770);
+        reset.setTranslateY(70);
+        reset.setPrefWidth(120);
+        root.getChildren().add(reset);
 
         AnimationTimer cycleTimer = new AnimationTimer() {
 
             private static int cycleSpeed = 0;
-            
+
             @Override
             public void handle(long l) {
                 cycleSpeed++;
-                if (cycleSpeed >= 5) {
+                if (cycleSpeed >= speed.getValue()) {
                     matrix.cycle();
                     cycleSpeed = 0;
                 }
             }
         };
-
-        Button start = new Button("start");
-        start.setTranslateX(800);
-        start.setTranslateY(10);
-        root.getChildren().add(start);
-
-        Button stop = new Button("stop");
-        stop.setTranslateX(800);
-        stop.setTranslateY(40);
-        root.getChildren().add(stop);
-
-        Button reset = new Button("reset");
-        reset.setTranslateX(800);
-        reset.setTranslateY(70);
-        root.getChildren().add(reset);
 
         start.setOnMouseClicked(mouseEvent -> {cycleTimer.start();
             start.setDisable(true);
@@ -56,7 +70,12 @@ public class Main extends Application {
             start.setDisable(false);
             stop.setDisable(true);
         });
-        reset.setOnMouseClicked(mouseEvent -> matrix = new Matrix());
+        reset.setOnMouseClicked(mouseEvent -> {
+            matrix = new Matrix();
+            cycleTimer.stop();
+            start.setDisable(false);
+            stop.setDisable(true);
+        });
 
         stage.setTitle("The Game Of Life");
         stage.setScene(scene);
